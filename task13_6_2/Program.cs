@@ -21,22 +21,22 @@ namespace task13_6_2
             string t = text.ToString();
             var noPunctuationText = new string(t.Where(c => !char.IsPunctuation(c)).ToArray());
             string[] array = noPunctuationText.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            
+
             var most = array.GroupBy(item => item).OrderByDescending(c => c.Count()).Select(grp => new { Word = grp.Key, Count = grp.Count() });
 
             int i = 0;
             foreach (var item in most)
             {
                 i++;
-                if (i == 1 || i == 5)
+                if (item.Count % 10 == 2 || item.Count % 10 == 3 || item.Count % 10 == 4)
                 {
-                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это {item.Word}, повторено {item.Count} раз");
+                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это \"{item.Word}\", повторено {item.Count} раза");
                 }
                 else
                 {
-                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это {item.Word}, повторено {item.Count} раза");
+                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это \"{item.Word}\", повторено {item.Count} раз");
                 }
-                if (i == 5) break;
+                if (i == 10) break;
             }
         }
     }
