@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -8,21 +9,17 @@ namespace task13_6_2
     {
         static void Main(string[] args)
         {
-            string path = @"C:\\Users\\Евгений\\Desktop\\курс\\module13\\task13_6_1\\Text1.txt";
-            StringBuilder text = new StringBuilder();
+            string path = Path.Combine(@"C:\\Users\\Евгений\\Desktop\\курс\\module13\\task13_6_1\\", "Text1.txt");
 
-            StreamReader sr = new StreamReader(path);
-            while (!sr.EndOfStream)
-            {
-                text.Append(sr.ReadLine());
-            }
-            sr.Close();
+            string text = File.ReadAllText(path);
 
-            string t = text.ToString();
-            var noPunctuationText = new string(t.Where(c => !char.IsPunctuation(c)).ToArray());
+            var noPunctuationText = new string(text.Where(c => !char.IsPunctuation(c)).ToArray());
             string[] array = noPunctuationText.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
             var most = array.GroupBy(item => item).OrderByDescending(c => c.Count()).Select(grp => new { Word = grp.Key, Count = grp.Count() });
+
+            var dic = new SortedDictionary<string, int>();
+
 
             int i = 0;
             foreach (var item in most)
