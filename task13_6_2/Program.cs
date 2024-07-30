@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
+using System.Security.Cryptography.X509Certificates;
 
 namespace task13_6_2
 {
@@ -15,26 +16,50 @@ namespace task13_6_2
 
             var noPunctuationText = new string(text.Where(c => !char.IsPunctuation(c)).ToArray());
             string[] array = noPunctuationText.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            HashSet<string> words = new HashSet<string>(array);
 
-            var most = array.GroupBy(item => item).OrderByDescending(c => c.Count()).Select(grp => new { Word = grp.Key, Count = grp.Count() });
 
-            var dic = new SortedDictionary<string, int>();
+            var dic = new Dictionary<string, int>();
+            foreach (string s in words)
+            {
+                int count = 0;
+                foreach (string s1 in array)
+                {
+                    if (s1 == s) count++; 
+                }
+                dic.Add(s, count);
+            }
+            
+            List<int> list = new List<int>();
+            foreach (var item in dic) list.Add(item.Value);
+            list.Sort();
+            list.Reverse();
 
 
             int i = 0;
-            foreach (var item in most)
+            foreach (var item in list)
             {
                 i++;
-                if (item.Count % 10 == 2 || item.Count % 10 == 3 || item.Count % 10 == 4)
+                string word = "";
+                foreach (var item2 in dic) 
                 {
-                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это \"{item.Word}\", повторено {item.Count} раза");
+                    if (item2.Value == item)
+                    {
+                        word = item2.Key;
+                        break;
+                    }
+                }
+                if (i % 10 == 2 || i % 10 == 3 || i % 10 == 4)
+                {
+                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это \"{word}\", повторено {item} раза");
                 }
                 else
                 {
-                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это \"{item.Word}\", повторено {item.Count} раз");
+                    Console.WriteLine($"{i}-е в списке самых часто повторяющихся в списке слов это \"{word}\", повторено {item} раз");
                 }
                 if (i == 10) break;
             }
+
         }
     }
 }
